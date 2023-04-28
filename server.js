@@ -11,20 +11,36 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// handle get for homepage
+// handle get for webpage traversing
 app.get('/', (req, res) => {
-    res.status(200).json(`${req.method} request recieved`);
+    res.sendFile(path.join(__dirname, 'public/sindex.html'));
 })
-
 app.get('/notes', (req, res) => {
-    res.status(200).json(`${req.method} request recieved`)
+    res.sendFile(path.join(__dirname, 'public/notes.html'));
 })
 
-app.get('/notes/:note_id', (req, res) => {
+
+// handle get for api
+app.get('/api', (req, res) => {
+    res.status(200).json(`Please use /notes route`);
+})
+
+app.get('/api/notes', (req, res) => {
+    console.info(`${req.method} request recieved`)
+    fs.readFile('./db/db.json', 'utf-8', (err, data) => {
+        if(err) console.error(err);
+        else{
+            console.info('200: Succesful GET');
+            res.status(200).json(JSON.parse(data));
+        }
+    })
+})
+
+app.get('/api/notes/:note_id', (req, res) => {
     res.status(200).json(`${req.method} request recieved for note id ${req.params.note_id}`)
 })
 
-app.post('/notes', (req, res) => {
+app.post('/api/notes', (req, res) => {
     console.info(`${req.method} request recieved`);
     const {title, text} = req.body;
     const newNote = {
@@ -58,11 +74,11 @@ app.post('/notes', (req, res) => {
     }
 })
 
-app.post('/notes/:note_id', (req, res) => {
+app.post('/api/notes/:note_id', (req, res) => {
     res.json(`${req.method} request recieved for note id ${req.params.note_id}`);
 })
 
-app.delete('/notes/:note_id', (req, res) => {
+app.delete('/api/notes/:note_id', (req, res) => {
     res.status(200).json(`${req.method} request recieved for note id ${req.params.note_id}`)
 })
 
