@@ -1,24 +1,12 @@
 [
 	{
-		"title": "Test Title",
-		"text": "Test text"
+		"title": "Example Note",
+		"text": "Fascinating things",
+		"id": "da4502ec-d275-4d6c-a30f-f32f3b33940a"
 	},
 	{
-		"title": "Blow up",
-		"text": "Spontaneous combustion is an important part of a healthy diet"
-	},
-	{
-		"title": "Invest",
-		"text": "Buy one trillion bajillion shares of AMD"
-	},
-	{
-		"title": "fdfa",
-		"text": "fdsafdsf",
-		"note_id": "e493d739-d1a7-47ac-9cfb-da19d782b978"
-	},
-	{
-		"title": "Epic",
-		"text": "ALso awesome",
-		"note_id": "97bc0e19-3514-4713-bbd1-7679df0b580d"
+		"title": "New Note",
+		"text": "YEAHHH",
+		"id": "34c46889-367c-42e6-97e5-a77c2e185f6e"
 	}
 ]
