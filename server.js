@@ -36,8 +36,8 @@ app.get('/api/notes', (req, res) => {
     })
 })
 
-app.get('/api/notes/:note_id', (req, res) => {
-    res.status(200).json(`${req.method} request recieved for note id ${req.params.note_id}`)
+app.get('/api/notes/:id', (req, res) => {
+    res.status(200).json(`${req.method} request recieved for note id ${req.params.id}`)
 })
 
 app.post('/api/notes', (req, res) => {
@@ -46,7 +46,7 @@ app.post('/api/notes', (req, res) => {
     const newNote = {
         title: title,
         text: text,
-        note_id: crypto.randomUUID()
+        id: crypto.randomUUID()
     }
     if(title && text){
         fs.readFile('./db/db.json', 'utf-8', (err, data) => {
@@ -74,12 +74,12 @@ app.post('/api/notes', (req, res) => {
     }
 })
 
-app.post('/api/notes/:note_id', (req, res) => {
-    res.json(`${req.method} request recieved for note id ${req.params.note_id}`);
+app.post('/api/notes/:id', (req, res) => {
+    res.json(`${req.method} request recieved for note id ${req.params.id}`);
 })
 
-app.delete('/api/notes/:note_id', (req, res) => {
-    res.status(200).json(`${req.method} request recieved for note id ${req.params.note_id}`)
+app.delete('/api/notes/:id', (req, res) => {
+    res.status(200).json(`${req.method} request recieved for note id ${req.params.id}`)
 })
 
 app.listen(PORT, () => {
