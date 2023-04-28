@@ -25,11 +25,41 @@ app.get('/notes/:note_id', (req, res) => {
 })
 
 app.post('/notes', (req, res) => {
-    res.status(200).json(`${req.method} request recieved`)
+    console.info(`${req.method} request recieved`);
+    const {title, text} = req.body;
+    const newNote = {
+        title: title,
+        text: text,
+        note_id: crypto.randomUUID()
+    }
+    if(title && text){
+        fs.readFile('./db/db.json', 'utf-8', (err, data) => {
+            if(err) console.error(err);
+            else{
+                const parsed = JSON.parse(data);
+                parsed.push(newNote);
+                const updated = JSON.stringify(parsed, null, "\t");
+                fs.writeFile('./db/db.json', updated, (err) => {
+                    err ? console.error(err) : console.info(`Succesfully added new note entitled ${title}`);
+                })
+            }
+        });
+        const response = {
+            status: 'success',
+            body: newNote,
+        };
+        console.info('201: Succesful POST');
+        console.log(response);
+        res.status(201).json(response);
+    }
+    else{
+        console.error('500: Missing title or text param on POST')
+        res.status(500).json('Error in posting review');
+    }
 })
 
 app.post('/notes/:note_id', (req, res) => {
-    res.status(200).json(`${req.method} request recieved for note id ${req.params.note_id}`)
+    res.json(`${req.method} request recieved for note id ${req.params.note_id}`);
 })
 
 app.delete('/notes/:note_id', (req, res) => {
