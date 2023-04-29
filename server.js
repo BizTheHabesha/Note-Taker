@@ -49,6 +49,7 @@ app.get('/api/notes', (req, res) => {
 })
 // get specific notes by id is not implmented so respond 501
 app.get('/api/notes/:id', (req, res) => {
+    console.error(`501: ${req.method} not implmented for /api/notes/:id`);
     res.sendStatus(501)
 })
 // handle posting a new note
@@ -110,7 +111,8 @@ app.post('/api/notes', (req, res) => {
     }
 })
 // editing notes via POST with an id is not implmented so respond 501
-app.post('/api/notes/:id', (req, res) => {
+app.put('/api/notes/:id', (req, res) => {
+    console.error(`501: ${req.method} not implmented for /api/notes/:id`);
     res.sendStatus(501)
 })
 // handle deleting a specific note
@@ -151,7 +153,7 @@ app.delete('/api/notes/:id', (req, res) => {
                     }
                     // otherwise confirm we deleted the note and respond 202
                     else{
-                        console.info(`Note id "${thisNote['id']}" deleted`);
+                        console.info(`202: Note id "${thisNote['id']}" deleted`);
                         res.sendStatus(202);
                     }
                 })
