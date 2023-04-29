@@ -13,7 +13,7 @@ app.use(express.static('public'));
 
 // handle get for webpage traversing
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/sindex.html'));
+    res.sendFile(path.join(__dirname, 'public/index.html'));
 })
 app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/notes.html'));
@@ -28,7 +28,11 @@ app.get('/api', (req, res) => {
 app.get('/api/notes', (req, res) => {
     console.info(`${req.method} request recieved`)
     fs.readFile('./db/db.json', 'utf-8', (err, data) => {
-        if(err) console.error(err);
+        if(err){
+            console.error('500: Could not read database');
+            console.error(err);
+            res.sendStatus(500)
+        }
         else{
             console.info('200: Succesful GET');
             res.status(200).json(JSON.parse(data));
@@ -50,7 +54,11 @@ app.post('/api/notes', (req, res) => {
     }
     if(title && text){
         fs.readFile('./db/db.json', 'utf-8', (err, data) => {
-            if(err) console.error(err);
+            if(err){
+                console.error('500: Error reading database');
+                console.error(err);
+                res.sendStatus(500);
+            }
             else{
                 const parsed = JSON.parse(data);
                 parsed.push(newNote);
@@ -79,7 +87,39 @@ app.post('/api/notes/:id', (req, res) => {
 })
 
 app.delete('/api/notes/:id', (req, res) => {
-    res.status(200).json(`${req.method} request recieved for note id ${req.params.id}`)
+    fs.readFile('./db/db.json', 'utf-8', (err, data) => {
+        if(err){
+            console.error('500: Could not read database');
+            console.error(err);
+            res.sendStatus(500);
+        }else{
+            let altered = [];
+            let thisNote;
+            JSON.parse(data).forEach(note => {
+                if(note['id'] === req.params.id){
+                    console.info(`Note id "${note['id']}" found`);
+                    thisNote = note;
+                }else altered.push(note);
+            });
+            if(thisNote){
+                fs.writeFile('./db/db.json', JSON.stringify(altered, null, "\t"), 'utf-8', (err) => {
+                    if(err){
+                        console.error('500: Error writing to db')
+                        console.error(err);
+                        res.sendStatus(500);
+                    }
+                    else{
+                        console.info(`Note id "${thisNote['id']}" deleted`);
+                        res.sendStatus(202);
+                    }
+                })
+            }
+            else{
+                console.error('406: ID not found')
+                res.sendStatus(406);
+            }
+        }
+    })
 })
 
 app.listen(PORT, () => {
